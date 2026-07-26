@@ -65,7 +65,7 @@ export function SignInForm() {
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4 py-10">
-      <div className="animate-fade-up w-full max-w-sm rounded-3xl bg-white p-8 ring-1 ring-black/5 shadow-[0_20px_50px_-20px_rgba(120,45,10,0.35)]">
+      <div className="glass-float animate-fade-up w-full max-w-sm rounded-3xl p-8 shadow-[0_20px_50px_-20px_rgba(120,45,10,0.35)]">
         <h1 className="mb-1 text-xl font-bold text-[#1c1917]">
           {mode === "signin" ? "Welcome back" : "Create account"}
         </h1>

@@ -25,7 +25,7 @@ async function Results({ query }: { query: string }) {
 
   if (results.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-2 rounded-3xl bg-white py-24 text-center text-gray-400 ring-1 ring-black/5">
+      <div className="glass-card flex flex-col items-center gap-2 rounded-3xl py-24 text-center text-gray-400">
         <Search className="h-9 w-9 opacity-30" />
         <p className="font-medium text-gray-600">No results for &ldquo;{query}&rdquo;</p>
         <p className="text-sm">Try a different or more general term.</p>
@@ -59,7 +59,7 @@ export default async function SearchPage(props: {
           </Suspense>
         </>
       ) : (
-        <div className="flex flex-col items-center gap-2 rounded-3xl bg-white py-24 text-center text-gray-400 ring-1 ring-black/5">
+        <div className="glass-card flex flex-col items-center gap-2 rounded-3xl py-24 text-center text-gray-400">
           <Search className="h-9 w-9 opacity-30" />
           <p className="font-medium text-gray-600">Search Daraz for anything</p>
           <p className="text-sm">Type a product name above to get started.</p>

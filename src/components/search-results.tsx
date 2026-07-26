@@ -137,7 +137,7 @@ export function SearchResults({
       {/* Sidebar — sticks while scrolling the results */}
       <aside className="scroll-slim flex flex-col gap-4 lg:sticky lg:top-5 lg:max-h-[calc(100vh-2.5rem)] lg:self-start lg:overflow-y-auto lg:pr-1">
         {/* Price Range */}
-        <section className="rounded-3xl bg-white p-5 ring-1 ring-black/5">
+        <section className="glass-card rounded-3xl p-5">
           <div className="mb-1 flex items-center justify-between">
             <h3 className="font-bold text-[#1c1917]">Price Range</h3>
             <button
@@ -217,7 +217,7 @@ export function SearchResults({
         </section>
 
         {/* Star Rating */}
-        <section className="rounded-3xl bg-white p-5 ring-1 ring-black/5">
+        <section className="glass-card rounded-3xl p-5">
           <h3 className="mb-3 font-bold text-[#1c1917]">Star Rating</h3>
           <div className="flex flex-col gap-1.5">
             {RATING_OPTIONS.map((opt) => (
@@ -248,7 +248,7 @@ export function SearchResults({
 
         {/* Brand */}
         {brands.length > 0 && (
-          <section className="rounded-3xl bg-white p-5 ring-1 ring-black/5">
+          <section className="glass-card rounded-3xl p-5">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="font-bold text-[#1c1917]">Brand</h3>
               {selectedBrands.size > 0 && (
@@ -300,12 +300,12 @@ export function SearchResults({
                 "rounded-full px-3.5 py-2 text-xs font-semibold transition-colors",
                 discountedOnly
                   ? "bg-brand-500 text-white"
-                  : "bg-white text-gray-600 ring-1 ring-black/5 hover:bg-gray-50"
+                  : "bg-white/55 text-gray-600 ring-1 ring-white/60 backdrop-blur-md hover:bg-white/75"
               )}
             >
               On sale
             </button>
-            <div className="flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 ring-1 ring-black/5">
+            <div className="flex items-center gap-1.5 rounded-full bg-white/55 px-3 py-1.5 ring-1 ring-white/60 backdrop-blur-md">
               <SlidersHorizontal className="h-3.5 w-3.5 text-gray-400" />
               <select
                 value={sort}
@@ -341,7 +341,7 @@ export function SearchResults({
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-2 rounded-3xl bg-white py-20 text-center text-gray-400 ring-1 ring-black/5">
+          <div className="glass-card flex flex-col items-center gap-2 rounded-3xl py-20 text-center text-gray-400">
             <SlidersHorizontal className="h-8 w-8 opacity-30" />
             <p className="font-medium">No products match your filters</p>
             <p className="text-sm">Try widening the price range or rating.</p>
@@ -353,7 +353,7 @@ export function SearchResults({
             <button
               onClick={loadMore}
               disabled={loadingMore}
-              className="flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-600 ring-1 ring-brand-200 transition-colors hover:bg-brand-50 disabled:opacity-60"
+              className="flex items-center gap-2 rounded-full bg-white/70 px-6 py-3 text-sm font-semibold text-brand-600 ring-1 ring-brand-200 backdrop-blur-md transition-colors hover:bg-brand-50 disabled:opacity-60"
             >
               {loadingMore ? (
                 <>

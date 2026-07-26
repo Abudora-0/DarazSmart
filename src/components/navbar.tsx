@@ -41,7 +41,7 @@ export function Navbar() {
   ];
 
   return (
-    <header className="relative z-40 border-b border-black/5 bg-white/80 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-white/50 bg-white/45 backdrop-blur-xl">
       <div className="flex items-center gap-4 px-4 py-3.5 sm:px-6">
         {/* Logo — hidden while the mobile search row takes over */}
         <Link

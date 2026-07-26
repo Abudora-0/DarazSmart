@@ -4,15 +4,18 @@
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-brand: var(--font-space-grotesk), ui-sans-serif, sans-serif;
 
-  /* Brand — Daraz-style warm orange */
+  /* Brand — Daraz-style warm orange, nudged just slightly lighter than the
+     original. The page backdrop (.app-backdrop below) carries the bigger
+     "lighter" change — buttons/badges/text stay close to full saturation
+     so they don't wash out. */
   --color-brand-50: #fff4ec;
   --color-brand-100: #ffe3cc;
   --color-brand-200: #ffc699;
   --color-brand-300: #ffa15c;
-  --color-brand-400: #ff7d30;
-  --color-brand-500: #f8560a;
-  --color-brand-600: #e0450a;
-  --color-brand-700: #b8380c;
+  --color-brand-400: #ff8340;
+  --color-brand-500: #f85e16;
+  --color-brand-600: #e24e16;
+  --color-brand-700: #bc4218;
   --color-brand-800: #8f2d0f;
   --color-brand-900: #6e240f;
 
@@ -33,12 +36,43 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Warm orange gradient backdrop for the app shell — Daraz-inspired */
+/* Orange gradient backdrop for the app shell — lighter than the original
+   but still a rich, saturated orange (not pale) so the glass shell in front
+   of it has real color to show through. */
 .app-backdrop {
   background:
-    radial-gradient(1200px 600px at 15% -10%, #ffb26b 0%, transparent 55%),
-    radial-gradient(1000px 500px at 100% 0%, #f8560a 0%, transparent 50%),
-    linear-gradient(160deg, #ff8a3d 0%, #f8560a 45%, #c2340a 100%);
+    radial-gradient(1200px 600px at 15% -10%, #ffba7a 0%, transparent 55%),
+    radial-gradient(1000px 500px at 100% 0%, #f96a27 0%, transparent 50%),
+    linear-gradient(160deg, #ff9650 0%, #f96a27 45%, #cb522f 100%);
+}
+
+/* Frosted glass — used for the app shell and floating surfaces (at most one
+   or two on screen at a time) so the warm gradient backdrop shows through.
+   backdrop-filter is real GPU compositing work, so it's reserved for these
+   single, large-area elements only. Kept fairly transparent (vs. a typical
+   ~50% glass tint) so the orange backdrop actually reads through the frost
+   instead of the panel just looking like a plain pale card. */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+.glass-float {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Plain translucent "glass" look with NO backdrop-filter — used for cards
+   that repeat many times in a grid (product cards, list rows, skeletons).
+   backdrop-filter on dozens of stacked/scrolling elements at once can pin a
+   GPU hard enough to crash on weaker hardware, so these rely on cheap alpha
+   blending against the .glass-panel gradient behind them instead. */
+.glass-card {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 /* Thin, subtle scrollbars inside scroll areas */
@@ -47,7 +81,7 @@ body {
   height: 6px;
 }
 .scroll-slim::-webkit-scrollbar-thumb {
-  background: #ffd3ac;
+  background: #ffddb8;
   border-radius: 9999px;
 }
 
@@ -169,7 +203,7 @@ body {
   width: 18px;
   border-radius: 9999px;
   background: #ffffff;
-  border: 3px solid #f8560a;
+  border: 3px solid #f85e16;
   box-shadow: 0 2px 6px rgba(120,45,10, 0.3);
   cursor: pointer;
   margin-top: -1px;
@@ -180,7 +214,7 @@ body {
   width: 16px;
   border-radius: 9999px;
   background: #ffffff;
-  border: 3px solid #f8560a;
+  border: 3px solid #f85e16;
   box-shadow: 0 2px 6px rgba(120,45,10, 0.3);
   cursor: pointer;
 }

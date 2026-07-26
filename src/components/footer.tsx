@@ -31,7 +31,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="overflow-clip bg-[#1f150f] text-gray-400 shadow-[0_30px_70px_-35px_rgba(45,18,6,0.7)] sm:rounded-[28px]">
+    <footer className="overflow-clip bg-[#1f150f]/90 text-gray-400 shadow-[0_30px_70px_-35px_rgba(45,18,6,0.7)] backdrop-blur-2xl sm:rounded-[28px]">
       <div className="h-1 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-700" />
 
       <div className="px-6 py-12 sm:px-10">

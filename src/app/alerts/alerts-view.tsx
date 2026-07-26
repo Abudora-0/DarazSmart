@@ -80,7 +80,7 @@ export function AlertsView() {
       </div>
 
       {alerts.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-3xl bg-white py-20 text-center text-gray-400 ring-1 ring-black/5">
+        <div className="glass-card flex flex-col items-center gap-3 rounded-3xl py-20 text-center text-gray-400">
           <Bell className="h-10 w-10 opacity-30" />
           <p className="font-medium text-gray-600">No alerts set yet</p>
           <Link href="/" className="text-sm text-brand-600 hover:underline">
@@ -95,7 +95,7 @@ export function AlertsView() {
               <div
                 key={alert.id}
                 style={{ ["--i" as string]: i }}
-                className="flex items-center gap-4 rounded-3xl bg-white p-4 ring-1 ring-black/5 transition-shadow hover:shadow-md"
+                className="glass-card flex items-center gap-4 rounded-3xl p-4 transition-shadow hover:shadow-md"
               >
                 <Link
                   href={`/product/${alert.product.id}`}

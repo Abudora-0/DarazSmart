@@ -55,7 +55,7 @@ export function CouponsView() {
       )}
 
       {!loading && coupons.length === 0 && (
-        <div className="flex flex-col items-center gap-3 rounded-3xl bg-white py-20 text-center text-gray-400 ring-1 ring-black/5">
+        <div className="glass-card flex flex-col items-center gap-3 rounded-3xl py-20 text-center text-gray-400">
           <Tag className="h-10 w-10 opacity-30" />
           <p className="font-medium text-gray-600">No active coupons right now</p>
           <p className="text-sm">Check back later — we refresh daily.</p>
@@ -68,7 +68,7 @@ export function CouponsView() {
             <div
               key={coupon.id}
               style={{ ["--i" as string]: i }}
-              className="flex flex-col gap-3 rounded-3xl bg-white p-5 ring-1 ring-black/5 transition-shadow hover:shadow-lg"
+              className="glass-card flex flex-col gap-3 rounded-3xl p-5 transition-shadow hover:shadow-lg"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>

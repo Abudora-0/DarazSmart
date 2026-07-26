@@ -57,7 +57,7 @@ export function CartView() {
             <div
               key={item.id}
               style={{ ["--i" as string]: i }}
-              className="flex items-center gap-4 rounded-3xl bg-white p-4 ring-1 ring-black/5 transition-shadow hover:shadow-md"
+              className="glass-card flex items-center gap-4 rounded-3xl p-4 transition-shadow hover:shadow-md"
             >
               <Link
                 href={`/product/${item.id}`}
@@ -112,7 +112,7 @@ export function CartView() {
         </div>
 
         {/* Summary */}
-        <div className="h-fit rounded-3xl bg-white p-6 ring-1 ring-black/5 lg:sticky lg:top-6">
+        <div className="glass-card h-fit rounded-3xl p-6 lg:sticky lg:top-6">
           <h2 className="mb-4 font-bold text-[#1c1917]">Summary</h2>
           <div className="flex items-center justify-between pb-3">
             <span className="text-sm text-gray-500">Items</span>

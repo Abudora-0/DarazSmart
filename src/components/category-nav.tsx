@@ -29,7 +29,7 @@ export function CategoryNav({ activeQuery }: { activeQuery?: string }) {
               "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors",
               isActive
                 ? "bg-brand-500 text-white shadow-sm shadow-brand-500/30"
-                : "bg-white text-gray-600 ring-1 ring-black/5 hover:bg-brand-50 hover:text-brand-600"
+                : "bg-white/70 text-gray-600 ring-1 ring-white/60 hover:bg-brand-50/80 hover:text-brand-600"
             )}
           >
             {cat}

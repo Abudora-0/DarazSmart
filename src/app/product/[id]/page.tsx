@@ -68,7 +68,7 @@ export default async function ProductPage(props: {
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {/* Image */}
-        <div className="relative aspect-square overflow-hidden rounded-3xl bg-white ring-1 ring-black/5">
+        <div className="glass-card relative aspect-square overflow-hidden rounded-3xl">
           {product.image && (
             <Image
               src={product.image}
@@ -81,7 +81,7 @@ export default async function ProductPage(props: {
         </div>
 
         {/* Details */}
-        <div className="flex flex-col gap-4 rounded-3xl bg-white p-6 ring-1 ring-black/5">
+        <div className="glass-card flex flex-col gap-4 rounded-3xl p-6">
           <h1 className="text-xl font-bold leading-snug text-[#1c1917]">
             {product.title}
           </h1>
@@ -160,7 +160,7 @@ export default async function ProductPage(props: {
 
       {/* Price history */}
       {product.priceHistory?.length > 0 && (
-        <div className="mt-6 rounded-3xl bg-white p-6 ring-1 ring-black/5">
+        <div className="glass-card mt-6 rounded-3xl p-6">
           <h2 className="mb-4 text-base font-bold text-[#1c1917]">
             Price History
           </h2>

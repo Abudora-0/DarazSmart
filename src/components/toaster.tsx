@@ -31,10 +31,10 @@ export function Toaster() {
         <div
           key={t.id}
           className={cn(
-            "animate-fade-up flex items-center gap-2.5 rounded-2xl px-4 py-3 text-sm font-medium shadow-[0_15px_35px_-10px_rgba(0,0,0,0.3)] ring-1",
-            t.variant === "success" && "bg-white text-emerald-700 ring-emerald-100",
-            t.variant === "error" && "bg-white text-rose-700 ring-rose-100",
-            t.variant === "default" && "bg-[#1c1917] text-white ring-black/10"
+            "animate-fade-up flex items-center gap-2.5 rounded-2xl px-4 py-3 text-sm font-medium shadow-[0_15px_35px_-10px_rgba(0,0,0,0.3)] ring-1 backdrop-blur-xl",
+            t.variant === "success" && "bg-white/85 text-emerald-700 ring-emerald-100",
+            t.variant === "error" && "bg-white/85 text-rose-700 ring-rose-100",
+            t.variant === "default" && "bg-[#1c1917]/85 text-white ring-black/10"
           )}
         >
           {t.variant === "success" && (

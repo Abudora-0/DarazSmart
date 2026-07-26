@@ -4,7 +4,7 @@ export default function ProductLoading() {
       <div className="skeleton mb-4 h-5 w-32 rounded-full" />
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="skeleton aspect-square rounded-3xl" />
-        <div className="flex flex-col gap-4 rounded-3xl bg-white p-6 ring-1 ring-black/5">
+        <div className="glass-card flex flex-col gap-4 rounded-3xl p-6">
           <div className="skeleton h-6 w-3/4 rounded" />
           <div className="skeleton h-6 w-1/2 rounded" />
           <div className="skeleton h-5 w-24 rounded-full" />

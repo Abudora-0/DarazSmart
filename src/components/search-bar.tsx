@@ -100,7 +100,7 @@ export function SearchBar({ defaultValue = "", variant = "hero" }: SearchBarProp
               "w-full text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none",
               isCompact
                 ? "rounded-full border border-transparent bg-gray-100 py-2.5 pl-11 pr-4 transition-colors focus:border-brand-300 focus:bg-white focus:ring-2 focus:ring-brand-100"
-                : "rounded-2xl border border-gray-200 bg-white py-4 pl-12 pr-4 shadow-sm focus:border-brand-400 focus:ring-4 focus:ring-brand-100"
+                : "rounded-2xl border border-white/60 bg-white/85 py-4 pl-12 pr-4 shadow-sm backdrop-blur-md focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-100"
             )}
           />
         </div>
@@ -125,7 +125,7 @@ export function SearchBar({ defaultValue = "", variant = "hero" }: SearchBarProp
 
       {/* Suggestions dropdown */}
       {open && (
-        <div className="animate-fade-up absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-2xl bg-white p-2 text-left shadow-[0_20px_50px_-15px_rgba(120,45,10,0.35)] ring-1 ring-black/5">
+        <div className="glass-float animate-fade-up absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-2xl p-2 text-left shadow-[0_20px_50px_-15px_rgba(120,45,10,0.35)]">
           {recent.length > 0 && (
             <div className="mb-1">
               <div className="flex items-center justify-between px-2 py-1">

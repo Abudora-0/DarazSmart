@@ -60,7 +60,7 @@ function GridSkeleton() {
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
       {Array.from({ length: 10 }).map((_, i) => (
-        <div key={i} className="rounded-3xl bg-white p-3 ring-1 ring-black/5">
+        <div key={i} className="glass-card rounded-3xl p-3">
           <div className="skeleton aspect-square rounded-2xl" />
           <div className="mt-3 space-y-2 px-1">
             <div className="skeleton h-4 w-full rounded" />
@@ -153,7 +153,7 @@ export default function HomePage() {
         ].map(({ icon: Icon, title, desc, href, cta }) => (
           <div
             key={title}
-            className="flex flex-col rounded-3xl bg-white p-6 ring-1 ring-black/5 transition-shadow hover:shadow-lg"
+            className="glass-card flex flex-col rounded-3xl p-6 transition-shadow hover:shadow-lg"
           >
             <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50">
               <Icon className="h-5 w-5 text-brand-500" />

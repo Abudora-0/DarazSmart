@@ -58,7 +58,7 @@ export function ProductCard(props: SearchProductLike) {
   return (
     <div
       style={{ ["--i" as string]: props.index ?? 0 }}
-      className="group relative flex flex-col rounded-3xl bg-white p-3 ring-1 ring-black/5 shadow-[0_2px_10px_-4px_rgba(120,45,10,0.15)] transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-18px_rgba(120,45,10,0.35)]"
+      className="glass-card group relative flex flex-col rounded-3xl p-3 shadow-[0_2px_10px_-4px_rgba(120,45,10,0.15)] transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-18px_rgba(120,45,10,0.35)]"
     >
       {/* Image */}
       <div className="relative">
@@ -97,7 +97,7 @@ export function ProductCard(props: SearchProductLike) {
             popping && "animate-pop",
             inCart
               ? "bg-brand-500 text-white"
-              : "bg-white/90 text-gray-500 backdrop-blur hover:text-brand-500"
+              : "bg-white/90 text-gray-500 hover:text-brand-500"
           )}
         >
           <Heart className={cn("h-[18px] w-[18px]", inCart && "fill-current")} />

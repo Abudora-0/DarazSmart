@@ -20,7 +20,7 @@ export function SearchSkeleton() {
         </div>
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
           {Array.from({ length: 9 }).map((_, i) => (
-            <div key={i} className="rounded-3xl bg-white p-3 ring-1 ring-black/5">
+            <div key={i} className="glass-card rounded-3xl p-3">
               <div className="skeleton aspect-square rounded-2xl" />
               <div className="mt-3 space-y-2 px-1">
                 <div className="skeleton h-4 w-full rounded" />

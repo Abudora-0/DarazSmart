@@ -21,8 +21,8 @@ export async function sendPriceAlert({
     subject: `Price drop alert: ${productTitle}`,
     html: `
       <h2>Price Drop Alert</h2>
-      <p><strong>${productTitle}</strong> has dropped to <strong>Rs. ${currentPrice.toLocaleString()}</strong> — below your target of Rs. ${targetPrice.toLocaleString()}.</p>
-      <p><a href="${darazUrl}">View on Daraz →</a></p>
+      <p><strong>${productTitle}</strong> has dropped to <strong>Rs. ${currentPrice.toLocaleString()}</strong>, below your target of Rs. ${targetPrice.toLocaleString()}.</p>
+      <p><a href="${darazUrl}">View on Daraz</a></p>
     `,
   });
 }

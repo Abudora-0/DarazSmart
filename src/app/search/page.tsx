@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { CategoryNav } from "@/components/category-nav";
 import { SearchResults } from "@/components/search-results";
 import { SearchSkeleton } from "@/components/search-skeleton";
-import { searchAndUpsert } from "@/lib/search-service";
+import { searchAndUpsertPage } from "@/lib/search-service";
+import { EmptyState } from "@/components/ui/card";
 import { Search } from "lucide-react";
 
 // Cold starts (fresh Neon connection + ~40 upserts) can exceed the default
@@ -16,24 +17,31 @@ export async function generateMetadata(props: {
   const { q } = await props.searchParams;
   const query = q?.trim();
   return {
-    title: query ? `"${query}" — Search Results | DarazSmart` : "Search — DarazSmart",
+    title: query
+      ? `"${query}" search results | DarazSmart`
+      : "Search | DarazSmart",
   };
 }
 
 async function Results({ query }: { query: string }) {
-  const results = await searchAndUpsert(query, 1).catch(() => []);
+  const { products, hasMore } = await searchAndUpsertPage(query, 1).catch(
+    () => ({ products: [], hasMore: false })
+  );
 
-  if (results.length === 0) {
+  if (products.length === 0) {
     return (
-      <div className="glass-card flex flex-col items-center gap-2 rounded-3xl py-24 text-center text-gray-400">
-        <Search className="h-9 w-9 opacity-30" />
-        <p className="font-medium text-gray-600">No results for &ldquo;{query}&rdquo;</p>
-        <p className="text-sm">Try a different or more general term.</p>
-      </div>
+      <EmptyState
+        icon={<Search className="h-6 w-6" />}
+        title={`No results for "${query}"`}
+      >
+        Try a different or more general term.
+      </EmptyState>
     );
   }
 
-  return <SearchResults results={results} query={query} />;
+  return (
+    <SearchResults results={products} query={query} hasMore={hasMore} />
+  );
 }
 
 export default async function SearchPage(props: {
@@ -50,7 +58,7 @@ export default async function SearchPage(props: {
 
       {query ? (
         <>
-          <h1 className="mb-5 text-lg font-bold text-[#1c1917]">
+          <h1 className="mb-5 text-lg font-bold text-ink">
             Results for{" "}
             <span className="text-brand-600">&ldquo;{query}&rdquo;</span>
           </h1>
@@ -59,11 +67,12 @@ export default async function SearchPage(props: {
           </Suspense>
         </>
       ) : (
-        <div className="glass-card flex flex-col items-center gap-2 rounded-3xl py-24 text-center text-gray-400">
-          <Search className="h-9 w-9 opacity-30" />
-          <p className="font-medium text-gray-600">Search Daraz for anything</p>
-          <p className="text-sm">Type a product name above to get started.</p>
-        </div>
+        <EmptyState
+          icon={<Search className="h-6 w-6" />}
+          title="Search Daraz for anything"
+        >
+          Type a product name in the bar above to get started.
+        </EmptyState>
       )}
     </div>
   );

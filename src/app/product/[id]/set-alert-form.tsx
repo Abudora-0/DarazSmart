@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Bell } from "lucide-react";
+import { Bell, Check } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "@/lib/toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function SetAlertForm({
   productId,
@@ -23,10 +25,16 @@ export function SetAlertForm({
     "idle"
   );
 
+  const target = Number(targetPrice);
+  const drop =
+    target > 0 && target < currentPrice
+      ? Math.round(((currentPrice - target) / currentPrice) * 100)
+      : 0;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!session) {
-      router.push("/auth/signin");
+      router.push(`/auth/signin?callbackUrl=/product/${productId}`);
       return;
     }
     setStatus("saving");
@@ -38,45 +46,56 @@ export function SetAlertForm({
       });
       if (!res.ok) throw new Error();
       setStatus("saved");
-      toast(`We'll email you when the price drops to ${formatPrice(Number(targetPrice))}`, {
+      toast(`We'll email you when the price drops to ${formatPrice(target)}`, {
         variant: "success",
       });
     } catch {
       setStatus("error");
-      toast("Couldn't save the alert. Please try again.", { variant: "error" });
+      toast("Could not save the alert. Please try again.", { variant: "error" });
     }
   }
 
   return (
-    <div className="rounded-2xl border border-brand-100 bg-brand-50/50 p-4">
-      <h3 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-gray-700">
+    <div className="rounded-2xl border border-brand-200/60 bg-accent-soft p-4">
+      <h3 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-ink">
         <Bell className="h-4 w-4 text-brand-500" />
-        Set price alert
+        Set a price alert
       </h3>
+
       <form onSubmit={handleSubmit} className="flex gap-2">
         <div className="relative flex-1">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-ink-subtle">
             Rs.
           </span>
-          <input
+          <Input
             type="number"
+            aria-label="Target price"
             value={targetPrice}
-            onChange={(e) => setTargetPrice(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-9 pr-3 text-sm focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            onChange={(e) => {
+              setTargetPrice(e.target.value);
+              if (status !== "idle") setStatus("idle");
+            }}
+            className="no-spin pl-9 tabular-nums"
             min={1}
           />
         </div>
-        <button
-          type="submit"
-          disabled={status === "saving"}
-          className="rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-brand-600 active:scale-95 disabled:opacity-50"
-        >
-          {status === "saving" ? "Saving…" : status === "saved" ? "Saved!" : "Alert me"}
-        </button>
+        <Button type="submit" loading={status === "saving"}>
+          {status === "saving" ? (
+            "Saving"
+          ) : status === "saved" ? (
+            <>
+              <Check className="h-4 w-4" /> Saved
+            </>
+          ) : (
+            "Alert me"
+          )}
+        </Button>
       </form>
-      <p className="mt-1.5 text-xs text-gray-400">
+
+      <p className="mt-2 text-xs text-ink-subtle">
         Current price: {formatPrice(currentPrice)}
-        {!session && " · Sign in to save alerts"}
+        {drop > 0 && ` · that is ${drop}% below today`}
+        {!session && " · sign in to save alerts"}
       </p>
     </div>
   );

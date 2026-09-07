@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { searchAndUpsert } from "@/lib/search-service";
+import { searchAndUpsertPage } from "@/lib/search-service";
 
 // Cold starts (fresh Neon connection + ~40 upserts) can exceed the default
 // 10s serverless limit. Give this route real breathing room on Vercel.
@@ -15,8 +15,8 @@ export async function GET(request: NextRequest) {
   );
 
   try {
-    const results = await searchAndUpsert(q, page);
-    return Response.json({ results });
+    const { products, hasMore } = await searchAndUpsertPage(q, page);
+    return Response.json({ results: products, hasMore });
   } catch (err) {
     console.error("Search error:", err);
     return Response.json({ error: "Failed to search" }, { status: 500 });

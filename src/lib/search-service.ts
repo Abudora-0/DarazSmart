@@ -1,7 +1,12 @@
-import { searchProducts } from "@/lib/scraper/search";
+import { searchProductsPage } from "@/lib/scraper/search";
 import { getCached, setCached } from "@/lib/cache";
 import { prisma } from "@/lib/db";
 import type { Product } from "@/generated/prisma/client";
+
+export interface SearchPageResult {
+  products: Product[];
+  hasMore: boolean;
+}
 
 // Run async operations in parallel, but in bounded chunks so we don't
 // exhaust the connection pool with 40 simultaneous queries.
@@ -23,19 +28,21 @@ async function chunkedMap<T, R>(
  * server-rendered pages — no self-fetch over HTTP, which is unreliable
  * on serverless platforms (cold-start stacking, deployment protection).
  */
-export async function searchAndUpsert(
+export async function searchAndUpsertPage(
   q: string,
   page: number
-): Promise<Product[]> {
-  const cacheKey = `search:${q.toLowerCase()}:${page}`;
-  const cached = await getCached<Product[]>(cacheKey);
+): Promise<SearchPageResult> {
+  // v2 keys: the cached shape gained a hasMore flag, so old entries would
+  // deserialise into an array rather than an object.
+  const cacheKey = `search:v2:${q.toLowerCase()}:${page}`;
+  const cached = await getCached<SearchPageResult>(cacheKey);
   if (cached) return cached;
 
-  const scraped = await searchProducts(q, page);
+  const { results: scraped, hasMore } = await searchProductsPage(q, page);
 
   // Don't cache empty results — a transient failure shouldn't leave a
   // query "stuck" returning nothing for the whole cache window.
-  if (scraped.length === 0) return [];
+  if (scraped.length === 0) return { products: [], hasMore: false };
 
   const products = await chunkedMap(scraped, 10, (r) =>
     prisma.product.upsert({
@@ -64,6 +71,14 @@ export async function searchAndUpsert(
     })
   );
 
-  await setCached(cacheKey, products);
-  return products;
+  const result: SearchPageResult = { products, hasMore };
+  await setCached(cacheKey, result);
+  return result;
+}
+
+export async function searchAndUpsert(
+  q: string,
+  page: number
+): Promise<Product[]> {
+  return (await searchAndUpsertPage(q, page)).products;
 }

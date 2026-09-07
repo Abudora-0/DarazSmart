@@ -151,18 +151,27 @@ function filterByRelevance(
     .map((s) => s.r);
 }
 
+/** A full Daraz catalog page. Fewer than this means there is no page after. */
+const DARAZ_PAGE_SIZE = 40;
+
+export interface SearchPage {
+  results: SearchResult[];
+  /** Whether Daraz itself returned a full page, before relevance filtering. */
+  hasMore: boolean;
+}
+
 /**
  * Search Daraz. Daraz requires ALL query words to match a product (strict AND),
  * so an extra qualifier (e.g. "... Vp") can return zero results even when the
  * core query has plenty. If the full query comes back empty, we progressively
  * drop trailing words until we get hits — so users always see relevant products.
  */
-export async function searchProducts(
+export async function searchProductsPage(
   query: string,
   page = 1
-): Promise<SearchResult[]> {
+): Promise<SearchPage> {
   const terms = query.trim().split(/\s+/).filter(Boolean);
-  if (terms.length === 0) return [];
+  if (terms.length === 0) return { results: [], hasMore: false };
 
   // Full query first, then drop one trailing word at a time (cap the attempts).
   // Keep a floor of 2 words for multi-word queries so pure nonsense
@@ -171,8 +180,23 @@ export async function searchProducts(
   const minTerms = terms.length >= 2 ? Math.max(2, terms.length - 3) : 1;
   for (let n = terms.length; n >= minTerms; n--) {
     const usedTerms = terms.slice(0, n);
-    const results = await fetchDaraz(usedTerms.join(" "), page);
-    if (results.length > 0) return filterByRelevance(results, usedTerms);
+    const raw = await fetchDaraz(usedTerms.join(" "), page);
+    if (raw.length > 0) {
+      // "Is there another page" has to be judged on what Daraz sent, not on
+      // what survives relevance filtering, or a heavily filtered page looks
+      // like the last one when it is not.
+      return {
+        results: filterByRelevance(raw, usedTerms),
+        hasMore: raw.length >= DARAZ_PAGE_SIZE,
+      };
+    }
   }
-  return [];
+  return { results: [], hasMore: false };
+}
+
+export async function searchProducts(
+  query: string,
+  page = 1
+): Promise<SearchResult[]> {
+  return (await searchProductsPage(query, page)).results;
 }

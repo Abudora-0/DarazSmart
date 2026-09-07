@@ -4,8 +4,18 @@ import { SearchBar } from "@/components/search-bar";
 import { CategoryNav } from "@/components/category-nav";
 import { ProductCard, type SearchProductLike } from "@/components/product-card";
 import { RecentlyViewed } from "@/components/recently-viewed";
+import { Reveal } from "@/components/ui/reveal";
+import { Card } from "@/components/ui/card";
 import { searchAndUpsert } from "@/lib/search-service";
-import { TrendingUp, Tag, Bell, ArrowRight, Flame } from "lucide-react";
+import {
+  TrendingUp,
+  Tag,
+  Bell,
+  ArrowRight,
+  Flame,
+  Layers,
+  Sparkles,
+} from "lucide-react";
 
 // 5 categories fetched in parallel on a cold cache can take a few seconds.
 export const maxDuration = 30;
@@ -17,6 +27,37 @@ const TRENDING_QUERIES = [
   "smart watch",
   "perfume",
   "sunglasses",
+];
+
+const FEATURES = [
+  {
+    icon: TrendingUp,
+    title: "Price History",
+    desc: "See how a product's price moved over time so you buy at the right moment.",
+    href: "/search?q=deals",
+    cta: "Browse deals",
+  },
+  {
+    icon: Layers,
+    title: "Side by Side",
+    desc: "Pin up to four products and compare price, discount, rating and seller at a glance.",
+    href: "/compare",
+    cta: "Open compare",
+  },
+  {
+    icon: Tag,
+    title: "Coupon Collector",
+    desc: "Browse active Daraz vouchers and copy codes with a single click.",
+    href: "/coupons",
+    cta: "View coupons",
+  },
+  {
+    icon: Bell,
+    title: "Price Alerts",
+    desc: "Set a target price and get an email the moment it drops.",
+    href: "/alerts",
+    cta: "Set an alert",
+  },
 ];
 
 async function fetchCategory(q: string): Promise<SearchProductLike[]> {
@@ -79,26 +120,32 @@ export default function HomePage() {
         <CategoryNav />
       </div>
 
-      {/* Hero — no overflow-hidden so the search dropdown isn't clipped */}
-      <section className="relative z-10 rounded-[26px] bg-gradient-to-br from-brand-400 via-brand-500 to-brand-700 px-6 py-14 text-center sm:px-10 sm:py-16">
+      {/* Hero. No overflow-hidden, so the search dropdown is not clipped. */}
+      <section className="relative z-10 overflow-visible rounded-[26px] bg-gradient-to-br from-brand-400 via-brand-500 to-brand-700 px-6 py-14 text-center sm:px-10 sm:py-16">
         <div
-          className="pointer-events-none absolute inset-0 rounded-[26px] opacity-40"
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-[26px] opacity-50"
           style={{
             background:
-              "radial-gradient(600px 300px at 20% 0%, rgba(255,255,255,0.25), transparent 60%)",
+              "radial-gradient(620px 320px at 18% 0%, rgba(255,255,255,0.3), transparent 62%), radial-gradient(500px 260px at 88% 100%, rgba(255,255,255,0.16), transparent 60%)",
           }}
         />
+
         <div className="animate-fade-up relative mx-auto flex max-w-2xl flex-col items-center gap-5">
-          <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/90 ring-1 ring-white/20">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white/90 ring-1 ring-white/25 backdrop-blur-sm">
+            <Sparkles className="h-3 w-3" />
             Powered by live Daraz.pk data
           </span>
+
           <h1 className="font-brand text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
             Shop Daraz <span className="text-amber-300">Smarter</span>
           </h1>
-          <p className="max-w-lg text-sm text-white/80 sm:text-base">
-            Compare prices, track drops, and collect coupons — all in one place.
-            Save products to your cart and check out directly on Daraz.
+
+          <p className="max-w-lg text-sm text-white/85 sm:text-base">
+            Compare prices, track drops, and collect coupons in one place. Save
+            products to your cart and check out directly on Daraz.
           </p>
+
           <div className="mt-1 flex w-full justify-center">
             <SearchBar />
           </div>
@@ -108,14 +155,15 @@ export default function HomePage() {
       {/* Trending */}
       <section className="mt-8">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 text-lg font-bold text-[#1c1917]">
+          <h2 className="flex items-center gap-2 text-lg font-bold text-ink">
             <Flame className="h-5 w-5 text-brand-500" /> Trending Deals
           </h2>
           <Link
             href="/search?q=deals"
-            className="text-sm font-semibold text-brand-600 hover:text-brand-700"
+            className="group flex items-center gap-1 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700"
           >
             See all
+            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
         </div>
         <Suspense fallback={<GridSkeleton />}>
@@ -127,48 +175,31 @@ export default function HomePage() {
       <RecentlyViewed />
 
       {/* Feature cards */}
-      <section className="stagger mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {[
-          {
-            icon: TrendingUp,
-            title: "Price History",
-            desc: "See how a product's price moved over time so you buy at the right moment.",
-            href: "/search?q=deals",
-            cta: "Browse deals",
-          },
-          {
-            icon: Tag,
-            title: "Coupon Collector",
-            desc: "Browse active Daraz vouchers and copy codes with a single click.",
-            href: "/coupons",
-            cta: "View coupons",
-          },
-          {
-            icon: Bell,
-            title: "Price Alerts",
-            desc: "Set a target price and get an email the moment it drops.",
-            href: "/alerts",
-            cta: "Set an alert",
-          },
-        ].map(({ icon: Icon, title, desc, href, cta }) => (
-          <div
-            key={title}
-            className="glass-card flex flex-col rounded-3xl p-6 transition-shadow hover:shadow-lg"
-          >
-            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50">
-              <Icon className="h-5 w-5 text-brand-500" />
-            </div>
-            <h3 className="mb-1 font-bold text-[#1c1917]">{title}</h3>
-            <p className="mb-4 flex-1 text-sm text-gray-500">{desc}</p>
-            <Link
-              href={href}
-              className="inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:gap-1.5 hover:text-brand-700"
-            >
-              {cta} <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        ))}
-      </section>
+      <Reveal as="section" className="mt-10">
+        <h2 className="mb-4 text-lg font-bold text-ink">
+          Everything you need to buy at the right price
+        </h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {FEATURES.map(({ icon: Icon, title, desc, href, cta }) => (
+            <Card key={title} interactive className="flex flex-col p-6">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-accent-soft">
+                <Icon className="h-5 w-5 text-brand-500" />
+              </div>
+              <h3 className="mb-1 font-bold text-ink">{title}</h3>
+              <p className="mb-4 flex-1 text-sm leading-relaxed text-ink-muted">
+                {desc}
+              </p>
+              <Link
+                href={href}
+                className="group inline-flex items-center gap-1 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700"
+              >
+                {cta}
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+              </Link>
+            </Card>
+          ))}
+        </div>
+      </Reveal>
     </div>
   );
 }

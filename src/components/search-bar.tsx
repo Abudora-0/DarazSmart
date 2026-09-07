@@ -8,7 +8,7 @@ import {
   type FormEvent,
 } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Loader2, Clock, TrendingUp } from "lucide-react";
+import { Search, Loader2, Clock, TrendingUp, X } from "lucide-react";
 import {
   getRecentSearches,
   addRecentSearch,
@@ -16,7 +16,14 @@ import {
 } from "@/lib/recent";
 import { cn } from "@/lib/utils";
 
-const POPULAR = ["iPhone", "Smart Watch", "Sneakers", "Headphones", "Perfume", "Laptop"];
+const POPULAR = [
+  "iPhone",
+  "Smart Watch",
+  "Sneakers",
+  "Headphones",
+  "Perfume",
+  "Laptop",
+];
 
 const HERO_PLACEHOLDERS = [
   "Search for anything on Daraz…",
@@ -32,7 +39,10 @@ interface SearchBarProps {
   variant?: "hero" | "compact";
 }
 
-export function SearchBar({ defaultValue = "", variant = "hero" }: SearchBarProps) {
+export function SearchBar({
+  defaultValue = "",
+  variant = "hero",
+}: SearchBarProps) {
   const [query, setQuery] = useState(defaultValue);
   const [open, setOpen] = useState(false);
   const [recent, setRecent] = useState<string[]>([]);
@@ -46,8 +56,15 @@ export function SearchBar({ defaultValue = "", variant = "hero" }: SearchBarProp
     function onClick(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     }
+    function onEsc(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
     document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onEsc);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onEsc);
+    };
   }, []);
 
   // Rotate the hero placeholder through a few example searches while idle.
@@ -78,18 +95,29 @@ export function SearchBar({ defaultValue = "", variant = "hero" }: SearchBarProp
   }
 
   return (
-    <div ref={ref} className={cn("relative", isCompact ? "w-full max-w-md" : "w-full max-w-2xl")}>
-      <form onSubmit={handleSubmit} className={cn("flex w-full", !isCompact && "gap-2")}>
+    <div
+      ref={ref}
+      className={cn("relative", isCompact ? "w-full max-w-md" : "w-full max-w-2xl")}
+    >
+      <form
+        onSubmit={handleSubmit}
+        role="search"
+        className={cn("flex w-full", !isCompact && "gap-2")}
+      >
         <div className="relative flex-1">
-          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-subtle">
             {pending ? (
-              <Loader2 className={cn("animate-spin", isCompact ? "h-4 w-4" : "h-5 w-5")} />
+              <Loader2
+                className={cn("animate-spin", isCompact ? "h-4 w-4" : "h-5 w-5")}
+              />
             ) : (
               <Search className={isCompact ? "h-4 w-4" : "h-5 w-5"} />
             )}
           </span>
+
           <input
-            type="text"
+            type="search"
+            aria-label="Search products"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={openDropdown}
@@ -97,22 +125,39 @@ export function SearchBar({ defaultValue = "", variant = "hero" }: SearchBarProp
               isCompact ? "Search products…" : HERO_PLACEHOLDERS[placeholderIdx]
             }
             className={cn(
-              "w-full text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none",
+              "w-full text-sm text-ink transition-[background-color,border-color,box-shadow] duration-200 placeholder:text-ink-subtle focus:outline-none [&::-webkit-search-cancel-button]:hidden",
               isCompact
-                ? "rounded-full border border-transparent bg-gray-100 py-2.5 pl-11 pr-4 transition-colors focus:border-brand-300 focus:bg-white focus:ring-2 focus:ring-brand-100"
-                : "rounded-2xl border border-white/60 bg-white/85 py-4 pl-12 pr-4 shadow-sm backdrop-blur-md focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-100"
+                ? "rounded-full border border-transparent bg-sunken py-2.5 pl-11 pr-10 hover:border-line focus:border-brand-400 focus:bg-surface focus:ring-2 focus:ring-brand-500/20"
+                : "rounded-2xl border border-white/60 bg-white/90 py-4 pl-12 pr-10 text-[#1c1917] shadow-[var(--shadow-2)] backdrop-blur-md placeholder:text-black/40 focus:border-white focus:bg-white focus:ring-4 focus:ring-white/40"
             )}
           />
+
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              aria-label="Clear search"
+              className={cn(
+                "absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full transition-colors",
+                isCompact
+                  ? "text-ink-subtle hover:bg-line hover:text-ink"
+                  : "text-black/40 hover:bg-black/10 hover:text-black/70"
+              )}
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
+
         {!isCompact && (
           <button
             type="submit"
             disabled={pending}
-            className="flex items-center gap-2 rounded-2xl bg-brand-500 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-brand-500/30 transition-all hover:bg-brand-600 active:scale-95 disabled:opacity-70"
+            className="sweep flex items-center gap-2 rounded-2xl bg-[#1c1917] px-6 py-4 text-sm font-semibold text-white shadow-[var(--shadow-3)] transition-[background-color,transform] duration-200 hover:bg-black active:scale-95 disabled:opacity-70"
           >
             {pending ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" /> Searching…
+                <Loader2 className="h-4 w-4 animate-spin" /> Searching
               </>
             ) : (
               <>
@@ -125,11 +170,11 @@ export function SearchBar({ defaultValue = "", variant = "hero" }: SearchBarProp
 
       {/* Suggestions dropdown */}
       {open && (
-        <div className="glass-float animate-fade-up absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-2xl p-2 text-left shadow-[0_20px_50px_-15px_rgba(120,45,10,0.35)]">
+        <div className="glass-float animate-scale-in absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-2xl p-2 text-left shadow-[var(--shadow-3)]">
           {recent.length > 0 && (
             <div className="mb-1">
               <div className="flex items-center justify-between px-2 py-1">
-                <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-ink-subtle">
                   Recent
                 </span>
                 <button
@@ -139,7 +184,7 @@ export function SearchBar({ defaultValue = "", variant = "hero" }: SearchBarProp
                     clearRecentSearches();
                     setRecent([]);
                   }}
-                  className="text-xs text-gray-400 hover:text-rose-500"
+                  className="text-xs text-ink-subtle transition-colors hover:text-danger"
                 >
                   Clear
                 </button>
@@ -150,9 +195,9 @@ export function SearchBar({ defaultValue = "", variant = "hero" }: SearchBarProp
                   type="button"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => runSearch(term)}
-                  className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-brand-50 hover:text-brand-600"
+                  className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-ink-muted transition-colors hover:bg-accent-soft hover:text-brand-600"
                 >
-                  <Clock className="h-3.5 w-3.5 text-gray-400" />
+                  <Clock className="h-3.5 w-3.5 text-ink-subtle" />
                   {term}
                 </button>
               ))}
@@ -160,7 +205,7 @@ export function SearchBar({ defaultValue = "", variant = "hero" }: SearchBarProp
           )}
 
           <div>
-            <span className="block px-2 py-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+            <span className="block px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-ink-subtle">
               Popular
             </span>
             <div className="flex flex-wrap gap-1.5 p-2">
@@ -170,7 +215,7 @@ export function SearchBar({ defaultValue = "", variant = "hero" }: SearchBarProp
                   type="button"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => runSearch(term)}
-                  className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-brand-100 hover:text-brand-600"
+                  className="flex items-center gap-1 rounded-full bg-sunken px-3 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:bg-accent-soft hover:text-brand-600"
                 >
                   <TrendingUp className="h-3 w-3" />
                   {term}

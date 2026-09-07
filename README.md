@@ -25,26 +25,31 @@
 |---|---|
 | 🔎 **Live product search** | Powered by Daraz's own JSON catalog API — fast, no headless browser required |
 | 🧠 **Smart relevance filtering** | Scores results against your query so off-topic backfill items get filtered out |
-| 🎚️ **Rich filter sidebar** | Price range with histogram, star rating, brand, sort, and an "on sale" toggle |
-| 🛒 **Virtual cart** | Save products anonymously or synced to your account, with a live savings summary |
+| 🎚️ **Rich filter sidebar** | Price range with histogram, star rating, brand, sort, and an "on sale" toggle. Becomes a bottom sheet on mobile |
+| 🛒 **Virtual cart** | Quantities, a live savings summary, and an optional sync to your account |
 | 🏷️ **Coupon collector** | Browse and one-click-copy active voucher codes |
 | 📈 **Price history & alerts** | Track price movement over time and get emailed the moment a target price hits |
+| ❤️ **Wishlist** | Save products for later, kept separate from the cart |
+| ⚖️ **Side-by-side compare** | Pin up to four products and compare price, discount, rating and seller |
+| ⌨️ **Command palette** | `Ctrl`/`Cmd` + `K` for search, categories, pages and settings |
+| 🌗 **Light and dark themes** | Follows your system by default, with no flash of the wrong theme on load |
+| 🔗 **Shareable filters** | Every filter lives in the URL, so a filtered result set can be sent to someone |
 | 🕑 **Recently viewed & trending** | A home page that actually feels alive, not just a search box |
 | 🔐 **Secure auth** | Email/password with validation, rate limiting, and bcrypt hashing |
-| ⚡ **Fast & polished** | Skeleton loaders, toast feedback, micro-animations, load-more pagination |
+| ⚡ **Fast & polished** | Skeleton loaders, toast feedback, scroll-reveal animations, load-more pagination |
 
 ## 🧱 Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Framework | [Next.js 16](https://nextjs.org/) (App Router, Turbopack) + [React 19](https://react.dev/) |
+| Framework | [Next.js 16](https://nextjs.org/) (App Router, webpack) + [React 19](https://react.dev/) |
 | Language | TypeScript |
-| Styling | [Tailwind CSS v4](https://tailwindcss.com/) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com/) with a semantic token layer, plus [Radix](https://www.radix-ui.com/) primitives |
 | Database | [PostgreSQL](https://www.postgresql.org/) via [Neon](https://neon.tech/) + [Prisma 7](https://www.prisma.io/) |
 | Cache | [Upstash Redis](https://upstash.com/) |
 | Auth | [NextAuth v5](https://authjs.dev/) (Credentials provider) |
 | Email | [Resend](https://resend.com/) |
-| Client state | [Zustand](https://zustand-demo.pmnd.rs/) (localStorage-persisted cart) |
+| Client state | [Zustand](https://zustand-demo.pmnd.rs/) (localStorage-persisted cart, wishlist and compare) |
 | Charts | [Recharts](https://recharts.org/) |
 | Deployment | [Vercel](https://vercel.com/) (fully serverless — no headless browser) |
 

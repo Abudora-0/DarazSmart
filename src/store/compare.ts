@@ -22,6 +22,8 @@ interface CompareState {
   items: CompareProduct[];
   toggle: (product: CompareProduct) => "added" | "removed" | "full";
   remove: (id: string) => void;
+  /** Adopts a compare list wholesale, used when the server's copy wins. */
+  replaceAll: (items: CompareProduct[]) => void;
   clear: () => void;
   has: (id: string) => boolean;
 }
@@ -43,6 +45,9 @@ export const useCompareStore = create<CompareState>()(
       },
       remove: (id) =>
         set((s) => ({ items: s.items.filter((i) => i.id !== id) })),
+      // Defensive slice: the server already caps at MAX_COMPARE, but this
+      // keeps the invariant true locally even if that ever changes.
+      replaceAll: (items) => set({ items: items.slice(0, MAX_COMPARE) }),
       clear: () => set({ items: [] }),
       has: (id) => get().items.some((i) => i.id === id),
     }),

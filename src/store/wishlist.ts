@@ -20,6 +20,8 @@ interface WishlistState {
   items: WishlistProduct[];
   toggle: (product: Omit<WishlistProduct, "addedAt">) => boolean;
   remove: (id: string) => void;
+  /** Adopts a wishlist wholesale, used when the server's copy wins. */
+  replaceAll: (items: WishlistProduct[]) => void;
   clear: () => void;
   has: (id: string) => boolean;
 }
@@ -41,6 +43,7 @@ export const useWishlistStore = create<WishlistState>()(
       },
       remove: (id) =>
         set((s) => ({ items: s.items.filter((i) => i.id !== id) })),
+      replaceAll: (items) => set({ items }),
       clear: () => set({ items: [] }),
       has: (id) => get().items.some((i) => i.id === id),
     }),

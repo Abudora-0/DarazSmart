@@ -8,6 +8,8 @@ import { Toaster } from "@/components/toaster";
 import { SessionProvider } from "@/components/session-provider";
 import { StoreHydration } from "@/components/store-hydration";
 import { CartSync } from "@/components/cart-sync";
+import { WishlistSync } from "@/components/wishlist-sync";
+import { CompareSync } from "@/components/compare-sync";
 import { CompareTray } from "@/components/compare-tray";
 import { themeBootstrapScript } from "@/lib/theme";
 
@@ -44,6 +46,8 @@ export default function RootLayout({
         <SessionProvider>
           <StoreHydration />
           <CartSync />
+          <WishlistSync />
+          <CompareSync />
 
           <a
             href="#main"

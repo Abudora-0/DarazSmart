@@ -4,6 +4,8 @@ import Link from "next/link";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { signOut } from "next-auth/react";
 import { useCartStore } from "@/store/cart";
+import { useWishlistStore } from "@/store/wishlist";
+import { useCompareStore } from "@/store/compare";
 import { Bell, Heart, Layers, LogOut, ShoppingBag } from "lucide-react";
 
 const LINKS = [
@@ -65,10 +67,12 @@ export function AccountMenu({
             <DropdownMenu.Item
               onSelect={() => {
                 // Clear here rather than leaving it to the session-status
-                // effect in <CartSync/>: signOut navigates away, and the
-                // status change can lose that race. The cart is safe on the
-                // account and comes back on the next sign-in.
+                // effect in the sync components: signOut navigates away, and
+                // the status change can lose that race. All three lists are
+                // safe on the account and come back on the next sign-in.
                 useCartStore.getState().clearCart();
+                useWishlistStore.getState().clear();
+                useCompareStore.getState().clear();
                 signOut({ callbackUrl: "/" });
               }}
               className="flex cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-danger outline-none transition-colors data-[highlighted]:bg-danger-soft"

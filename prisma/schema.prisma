@@ -20,6 +20,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
   cartItems     CartItem[]
+  wishlistItems WishlistItem[]
+  compareItems  CompareItem[]
   alerts        PriceAlert[]
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
@@ -73,6 +75,8 @@ model Product {
   category      String?
   priceHistory  PriceHistory[]
   cartItems     CartItem[]
+  wishlistItems WishlistItem[]
+  compareItems  CompareItem[]
   alerts        PriceAlert[]
   updatedAt     DateTime       @updatedAt
   createdAt     DateTime       @default(now())
@@ -104,6 +108,34 @@ model CartItem {
   @@unique([userId, productId])
   @@index([userId])
   @@index([sessionId])
+}
+
+// Signed-in only, unlike CartItem: a wishlist with no account to keep it on
+// is just the localStorage copy, so there is no anonymous/sessionId branch.
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  addedAt   DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@index([userId])
+}
+
+// The compare tray is scratch space, but still worth carrying between
+// devices. Capped at MAX_COMPARE (4) by the API, not by the schema.
+model CompareItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  addedAt   DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@index([userId])
 }
 
 model Coupon {

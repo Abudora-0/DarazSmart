@@ -7,6 +7,7 @@ import { ScrollToTop } from "@/components/scroll-to-top";
 import { Toaster } from "@/components/toaster";
 import { SessionProvider } from "@/components/session-provider";
 import { StoreHydration } from "@/components/store-hydration";
+import { CartSync } from "@/components/cart-sync";
 import { CompareTray } from "@/components/compare-tray";
 import { themeBootstrapScript } from "@/lib/theme";
 
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body className="app-backdrop min-h-screen">
         <SessionProvider>
           <StoreHydration />
+          <CartSync />
 
           <a
             href="#main"

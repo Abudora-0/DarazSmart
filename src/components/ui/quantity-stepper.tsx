@@ -30,6 +30,13 @@ export function QuantityStepper({
   const timers = useRef<{ delay?: number; interval?: number }>({});
   const prev = useRef(value);
 
+  // Assigned during render, so a handler that fires twice before React can
+  // re-render still steps from the newest value. Reading the `value` prop
+  // directly loses increments on a fast double-click or a hold that repeats
+  // between renders.
+  const latest = useRef(value);
+  latest.current = value;
+
   useEffect(() => {
     if (prev.current !== value) {
       prev.current = value;
@@ -48,16 +55,20 @@ export function QuantityStepper({
   }
 
   function step(delta: number) {
-    onChange(Math.min(max, Math.max(min, value + delta)));
+    const next = Math.min(max, Math.max(min, latest.current + delta));
+    if (next === latest.current) return;
+    // Keep the ref ahead of the re-render so a burst of clicks accumulates.
+    latest.current = next;
+    onChange(next);
   }
 
   function startRepeat(delta: number) {
     stopRepeat();
     timers.current.delay = window.setTimeout(() => {
-      timers.current.interval = window.setInterval(() => {
-        // Read through the ref so the repeat is not stuck on a stale value.
-        onChange(Math.min(max, Math.max(min, prev.current + delta)));
-      }, REPEAT_INTERVAL);
+      timers.current.interval = window.setInterval(
+        () => step(delta),
+        REPEAT_INTERVAL
+      );
     }, REPEAT_DELAY);
   }
 

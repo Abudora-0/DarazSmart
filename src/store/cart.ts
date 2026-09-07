@@ -23,6 +23,8 @@ interface CartState {
   addItem: (product: Omit<CartProduct, "quantity">) => void;
   removeItem: (id: string) => void;
   setQuantity: (id: string, quantity: number) => void;
+  /** Adopts a cart wholesale, used when the server's copy wins. */
+  replaceAll: (items: CartProduct[]) => void;
   clearCart: () => void;
   hasItem: (id: string) => boolean;
 }
@@ -53,6 +55,13 @@ export const useCartStore = create<CartState>()(
               : i
           ),
         })),
+      replaceAll: (items) =>
+        set({
+          items: items.map((i) => ({
+            ...i,
+            quantity: Math.min(MAX_QUANTITY, Math.max(1, i.quantity ?? 1)),
+          })),
+        }),
       clearCart: () => set({ items: [] }),
       hasItem: (id) => get().items.some((i) => i.id === id),
     }),

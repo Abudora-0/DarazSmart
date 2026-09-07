@@ -5,7 +5,6 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Eye, EyeOff, Lock, Mail, User } from "lucide-react";
-import { useCartStore } from "@/store/cart";
 import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +20,6 @@ export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const cartItems = useCartStore((s) => s.items);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -46,18 +44,8 @@ export function SignInForm() {
         return;
       }
 
-      // Copy the local cart up to the account for cross-device continuity.
-      // The local cart stays the source of truth for what is displayed, so
-      // it must NOT be cleared here: doing that used to make signing in look
-      // like it had emptied your cart.
-      if (cartItems.length > 0) {
-        await fetch("/api/cart/sync", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productIds: cartItems.map((i) => i.id) }),
-        }).catch(() => {});
-      }
-
+      // The cart merge is handled by <CartSync/>, which reacts to the
+      // session going authenticated wherever that happens, not just here.
       toast(
         mode === "register"
           ? "Account created. Welcome to DarazSmart."

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { signOut } from "next-auth/react";
+import { useCartStore } from "@/store/cart";
 import { Bell, Heart, Layers, LogOut, ShoppingBag } from "lucide-react";
 
 const LINKS = [
@@ -62,7 +63,14 @@ export function AccountMenu({
 
           <div className="border-t border-line pt-1">
             <DropdownMenu.Item
-              onSelect={() => signOut({ callbackUrl: "/" })}
+              onSelect={() => {
+                // Clear here rather than leaving it to the session-status
+                // effect in <CartSync/>: signOut navigates away, and the
+                // status change can lose that race. The cart is safe on the
+                // account and comes back on the next sign-in.
+                useCartStore.getState().clearCart();
+                signOut({ callbackUrl: "/" });
+              }}
               className="flex cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-danger outline-none transition-colors data-[highlighted]:bg-danger-soft"
             >
               <LogOut className="h-4 w-4" /> Sign out

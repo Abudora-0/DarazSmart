@@ -210,11 +210,19 @@ body {
    4. Surfaces
    ========================================================================== */
 
-/* The warm gradient behind the app shell. Two drifting radial blobs give it
+/* The warm wash behind the app shell. Starts almost as light as the canvas
+   itself so the card's edge is a soft step rather than a hard line against a
+   flat, highlighter-bright orange field. Two drifting radial blobs give it
    slow movement while only ever animating a transform. */
 .app-backdrop {
   position: relative;
-  background: linear-gradient(160deg, #ff9650 0%, #f96a27 45%, #cb522f 100%);
+  background: linear-gradient(
+    160deg,
+    #fff3e6 0%,
+    #ffdcb8 32%,
+    #f2ae86 64%,
+    #dd8a66 100%
+  );
   isolation: isolate;
 }
 :root[data-theme="dark"] .app-backdrop {
@@ -227,7 +235,7 @@ body {
   z-index: -1;
   border-radius: 9999px;
   filter: blur(60px);
-  opacity: 0.75;
+  opacity: 0.55;
   pointer-events: none;
   will-change: transform;
 }
@@ -236,7 +244,7 @@ body {
   left: -10vw;
   width: 62vw;
   height: 62vw;
-  background: radial-gradient(circle, #ffba7a 0%, transparent 68%);
+  background: radial-gradient(circle, #fff8ef 0%, transparent 68%);
   animation: drift-a 22s ease-in-out infinite alternate;
 }
 .app-backdrop::after {
@@ -244,7 +252,7 @@ body {
   right: -14vw;
   width: 56vw;
   height: 56vw;
-  background: radial-gradient(circle, #f96a27 0%, transparent 66%);
+  background: radial-gradient(circle, #ffcda3 0%, transparent 66%);
   animation: drift-b 27s ease-in-out infinite alternate;
 }
 :root[data-theme="dark"] .app-backdrop::before {
